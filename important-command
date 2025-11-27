@@ -1,1 +1,5 @@
 install nginx ingress= kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+
+To hsee the metrics of the pods in k8s, we need to install the metric server such that the kubectl top pods command works
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
