@@ -3,3 +3,7 @@ install nginx ingress= kubectl apply -f https://raw.githubusercontent.com/kubern
 To hsee the metrics of the pods in k8s, we need to install the metric server such that the kubectl top pods command works
 
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+
+Vertical pod autoscaler also known as custom resource definition, unlike HPA requires to be installed seperately.
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/vpa-release-1.0/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml
