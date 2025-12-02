@@ -4,20 +4,20 @@ metadata:
   name: ping-pong-vpa
 spec:
   targetRef:
-    apiVersion: "apps/v1"
+    apiVersion: apps/v1
     kind: Deployment
     name: ping-pong-deployment
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: Recreate        # Apply new resources by restarting pods
   resourcePolicy:
     containerPolicies:
-    - containerName: "ping-pong-deployment"
+    - containerName: "ping-pong"   # FIXED
       minAllowed:
-        cpu: 500m
+        cpu: 128m
         memory: 128Mi
       maxAllowed:
-        cpu: 2
-        memory: 2Gi
+        cpu: 500m
+        memory: 1Gi
       controlledResources:
       - cpu
       - memory
