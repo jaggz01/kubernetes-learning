@@ -15,9 +15,13 @@ spec:
         app: ping-pong
     spec:
       containers:
+
+      #-------------------------------------
+      #           MAIN Container 
+      #-------------------------------------
         - name: ping-pong
           image: ping-pong-image:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources:
@@ -27,3 +31,52 @@ spec:
             requests:
               memory: "64Mi"
               cpu: "250m"
+          volumeMounts:
+          - name: work-data
+            mountPath: /work
+
+          #---- Probes definition -----
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+              httpHeaders:
+                - name: responseCode
+                  value: "200"
+            failureThreshold: 30
+            periodSeconds: 5
+            initialDelaySeconds: 45
+
+          livenessProbe:
+            httpGet: 
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 45
+            failureThreshold: 30
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 15
+            failureThreshold: 3
+            periodSeconds: 10
+            initialDelaySeconds: 15
+
+      #-------------------------------------
+      #           Init Container 
+      #-------------------------------------
+      initContainers:
+        - name:  init-ping-pong
+          image: busybox:latest
+          command: ['sh', '-c', 'mkdir -p /work/data/']
+          volumeMounts:
+            - name: work-data
+              mountPath: /work
+      
+
+      # Volumes
+
+      volumes:
+        - name: work-data
+          emptyDir: {}
